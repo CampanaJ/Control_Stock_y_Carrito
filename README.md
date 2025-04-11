@@ -7,13 +7,13 @@ Aplicación de escritorio para gestionar productos, controlar stock, generar his
 ## 🖼️ Vista previa
 
 ![Santa Tecno]
-(https://imgur.com/GfB7lUH)
+[(https://imgur.com/GfB7lUH)
 (https://imgur.com/K6ojWLt)
 (https://imgur.com/kHUAJnX)
 (https://imgur.com/8ardbig)
 (https://imgur.com/bKaSEYg)
 (https://imgur.com/j067yLj)
-(https://imgur.com/hR7OUDy)
+(https://imgur.com/hR7OUDy)](https://imgur.com/a/ayFiOvJ)
 ---
 
 ## ✨ Funcionalidades
