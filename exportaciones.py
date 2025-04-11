@@ -140,7 +140,8 @@ def exportar_historial_pdf(historial):
 # ------------------ Generar Boleta ------------------ #
 
 def generar_boleta_pdf(productos, total):
-    ruta = nombre_archivo("boleta", "pdf", "Ordenes de compra")
+    # Asegurarse que se cree en Datos SantaTecno > Ordenes de Compra
+    ruta = nombre_archivo("boleta", "pdf", "Ordenes de Compra")
 
     pdf = FPDF()
     pdf.add_page()

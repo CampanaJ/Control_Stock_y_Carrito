@@ -6,7 +6,7 @@ from PIL import Image, ImageTk
 import logica
 import platform
 import subprocess
-from utils import generar_boleta_pdf
+from exportaciones import generar_boleta_pdf
 
 class CarritoVentana(tk.Toplevel):
     def __init__(self, master):
@@ -174,7 +174,8 @@ class CarritoVentana(tk.Toplevel):
             })
             logica.vender_producto(producto[0], cantidad)
 
-        ruta_pdf = generar_boleta_pdf(productos_para_pdf)
+        total = sum(p["total"] for p in productos_para_pdf)
+        ruta_pdf = generar_boleta_pdf(productos_para_pdf, total)
         messagebox.showinfo("Compra finalizada", "Orden de compra generada exitosamente.")
 
         abrir = messagebox.askyesno("Abrir boleta", "¿Deseas abrir la boleta generada?")
