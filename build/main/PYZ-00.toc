@@ -4778,10 +4778,6 @@
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.1008.0_x64__qbz5n2kfra8p0\\Lib\\urllib\\response.py',
    'PYMODULE'),
-  ('utils',
-   'C:\\Users\\campa\\OneDrive\\Desktop\\Control de Stock - Santa '
-   'Tecno\\utils.py',
-   'PYMODULE'),
   ('uuid',
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.1008.0_x64__qbz5n2kfra8p0\\Lib\\uuid.py',
