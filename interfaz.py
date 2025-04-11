@@ -11,7 +11,6 @@ from exportaciones import (
 )
 from carrito import CarritoVentana
 
-
 def abrir_archivo(path):
     try:
         if platform.system() == "Windows":
@@ -23,16 +22,22 @@ def abrir_archivo(path):
     except Exception as e:
         messagebox.showwarning("Atención", f"Archivo generado en:\n{path}\n\n(No se pudo abrir automáticamente)\n\n{e}")
 
-
 class InterfazApp:
 
     def __init__(self, root):
         self.root = root
         self.root.title("Santa Tecno - Control de Stock")
-        self.style = Style("cyborg")
-        self.tema_actual = "cyborg"
 
-        self.root.geometry("1200x700")
+        # Agregar icono personalizado
+        try:
+            self.root.iconbitmap("Ico_SantaTec.ico")
+        except Exception as e:
+            print(f"No se pudo cargar el ícono: {e}")
+
+        self.style = Style("superhero")
+        self.tema_actual = "superhero"
+        
+        self.root.geometry("1280x720")
         self.root.minsize(1000, 600)
         self.centrar_ventana(self.root)
 
@@ -49,8 +54,7 @@ class InterfazApp:
         logica.inicializar_db()
         self.actualizar_tabla()
         self.ver_historial()
-        self.ver_historial()
-
+        
     def centrar_ventana(self, ventana):
         ventana.update_idletasks()
         ancho = ventana.winfo_width()
@@ -61,59 +65,78 @@ class InterfazApp:
 
     def crear_widgets(self):
         notebook = ttk.Notebook(self.root)
-        self.tab_productos = ttk.Frame(notebook, padding=10)
-        self.tab_historial = ttk.Frame(notebook, padding=10)
-        notebook.add(self.tab_productos, text="\U0001F4E6 Productos")
-        notebook.add(self.tab_historial, text="\U0001F4DC Historial")
+        self.tab_productos = ttk.Frame(notebook, padding=15)
+        self.tab_historial = ttk.Frame(notebook, padding=15)
+        notebook.add(self.tab_productos, text="📦 Productos")
+        notebook.add(self.tab_historial, text="📜 Historial")
         notebook.pack(fill="both", expand=True)
 
         self.crear_tab_productos()
         self.crear_tab_historial()
 
+    def abrir_ventana_carrito(self):
+        carrito_ventana = CarritoVentana(self.root)
+        self.centrar_ventana(carrito_ventana)
+        carrito_ventana.grab_set()
+
     def crear_tab_productos(self):
-        frame_entrada = ttk.Labelframe(self.tab_productos, text="Datos del Producto", padding=10)
-        frame_entrada.pack(fill="x", padx=10, pady=10)
+        frame_entrada = ttk.Labelframe(self.tab_productos, text="Datos del Producto", padding=15)
+        frame_entrada.pack(fill="x", padx=15, pady=15)
 
-        ttk.Label(frame_entrada, text="Nombre:").grid(row=0, column=0, padx=5, pady=5, sticky="e")
-        ttk.Entry(frame_entrada, textvariable=self.nombre_var, width=30).grid(row=0, column=1, padx=5, pady=5)
+        ttk.Label(frame_entrada, text="Nombre:").grid(row=0, column=0, padx=8, pady=8, sticky="e")
+        ttk.Entry(frame_entrada, textvariable=self.nombre_var, width=30).grid(row=0, column=1, padx=8, pady=8)
 
-        ttk.Label(frame_entrada, text="Descripción:").grid(row=0, column=2, padx=5, pady=5, sticky="e")
-        ttk.Entry(frame_entrada, textvariable=self.descripcion_var, width=30).grid(row=0, column=3, padx=5, pady=5)
+        ttk.Label(frame_entrada, text="Descripción:").grid(row=0, column=2, padx=8, pady=8, sticky="e")
+        ttk.Entry(frame_entrada, textvariable=self.descripcion_var, width=30).grid(row=0, column=3, padx=8, pady=8)
 
-        ttk.Label(frame_entrada, text="Precio:").grid(row=1, column=0, padx=5, pady=5, sticky="e")
-        ttk.Entry(frame_entrada, textvariable=self.precio_var, width=15).grid(row=1, column=1, padx=5, pady=5)
+        ttk.Label(frame_entrada, text="Precio:").grid(row=1, column=0, padx=8, pady=8, sticky="e")
+        ttk.Entry(frame_entrada, textvariable=self.precio_var, width=15).grid(row=1, column=1, padx=8, pady=8)
 
-        ttk.Label(frame_entrada, text="Cantidad:").grid(row=1, column=2, padx=5, pady=5, sticky="e")
-        ttk.Entry(frame_entrada, textvariable=self.cantidad_var, width=15).grid(row=1, column=3, padx=5, pady=5)
+        ttk.Label(frame_entrada, text="Cantidad:").grid(row=1, column=2, padx=8, pady=8, sticky="e")
+        ttk.Entry(frame_entrada, textvariable=self.cantidad_var, width=15).grid(row=1, column=3, padx=8, pady=8)
 
-        ttk.Button(frame_entrada, text="Seleccionar Imagen", command=self.seleccionar_imagen).grid(row=2, column=1, columnspan=2, pady=5)
+        ttk.Button(frame_entrada, text="🖼 Seleccionar Imagen", width=25, command=self.seleccionar_imagen, bootstyle="info-outline").grid(row=2, column=1, pady=10)
+        ttk.Button(frame_entrada, text="⧧ Agregar", width=25, command=self.agregar_producto, bootstyle="success-outline").grid(row=2, column=2, pady=10)
 
-        frame_botones = ttk.Frame(self.tab_productos, padding=10)
-        frame_botones.pack()
-        botones = [
-            ("\U0001F6D2 Carrito", self.abrir_ventana_carrito),
-            ("⧧ Agregar", self.agregar_producto),
+        frame_botones1 = ttk.Frame(self.tab_productos, padding=(15, 0, 15, 8))
+        frame_botones1.pack()
+        fila1 = [
+            ("🛒 Carrito", self.abrir_ventana_carrito),
             ("✎ Modificar", self.abrir_ventana_modificar),
             ("✖ Eliminar", self.eliminar_producto),
             ("➕ Agregar Stock", self.abrir_ventana_agregar_stock),
-            ("\U0001F4CA Excel", self.exportar_a_excel),
-            ("\U0001F4C4 PDF", self.exportar_a_pdf),
-            ("\U0001F319 Tema", self.toggle_tema),
-            ("\U0001F6AA Salir", self.salir_app)
         ]
-        for texto, comando in botones:
-            ttk.Button(frame_botones, text=texto, command=comando, width=15).pack(side="left", padx=5)
+        for texto, comando in fila1:
+            ttk.Button(frame_botones1, text=texto, command=comando, width=20, bootstyle="success-outline").pack(side="left", padx=6, pady=6)
+
+        frame_botones2 = ttk.Frame(self.tab_productos, padding=(15, 0, 15, 15))
+        frame_botones2.pack()
+        fila2 = [
+            ("📊 Exportar Excel", self.exportar_a_excel),
+            ("📄 Exportar PDF", self.exportar_a_pdf),
+            ("🚪 Salir", self.salir_app)
+        ]
+        for texto, comando in fila2:
+            ttk.Button(frame_botones2, text=texto, command=comando, width=20, bootstyle="primary-outline").pack(side="left", padx=6, pady=6)
 
         frame_busqueda = ttk.Frame(self.tab_productos)
-        frame_busqueda.pack(fill="x", padx=10, pady=5)
-        ttk.Label(frame_busqueda, text="Buscar:").pack(side="left", padx=5)
+        frame_busqueda.pack(fill="x", padx=15, pady=10)
+        ttk.Label(frame_busqueda, text="🔍 Buscar:").pack(side="left", padx=5)
         entry_buscar = ttk.Entry(frame_busqueda, textvariable=self.busqueda_var)
         entry_buscar.pack(side="left", padx=5)
         entry_buscar.bind("<Return>", lambda e: self.actualizar_tabla())
-        ttk.Button(frame_busqueda, text="Buscar", command=self.actualizar_tabla).pack(side="left", padx=5)
+        ttk.Button(frame_busqueda, text="Buscar", command=self.actualizar_tabla, bootstyle="info").pack(side="left", padx=5)
+
+        frame_actualizar = ttk.Frame(self.tab_productos)
+        frame_actualizar.pack(fill="x", padx=15, pady=(0, 10))
+        ttk.Button(frame_actualizar, text="🔄 Actualizar", command=self.actualizar_tabla, bootstyle="secondary").pack(side="right")
+
+        style = ttk.Style()
+        style.configure("Treeview", font=("Segoe UI", 10), rowheight=30)
+        style.configure("Treeview.Heading", font=("Segoe UI", 10, "bold"))
 
         self.tree = ttk.Treeview(
-            self.tab_productos, columns=("ID", "Nombre", "Descripción", "Precio", "Cantidad", "Total"), show="headings"
+            self.tab_productos, columns=("ID", "Nombre", "Descripción", "Precio", "Cantidad", "Total"), show="headings", height=18
         )
         columnas = {
             "ID": 50, "Nombre": 150, "Descripción": 200,
@@ -122,7 +145,7 @@ class InterfazApp:
         for col, ancho in columnas.items():
             self.tree.heading(col, text=col)
             self.tree.column(col, width=ancho, anchor="center")
-        self.tree.pack(fill="both", expand=True, padx=10, pady=10)
+        self.tree.pack(fill="both", expand=True, padx=15, pady=15)
         self.tree.bind("<Double-1>", self.mostrar_imagen_producto)
 
     def abrir_ventana_agregar_stock(self):
@@ -346,7 +369,6 @@ class InterfazApp:
     def salir_app(self):
         if messagebox.askokcancel("Salir", "¿Estás seguro de que deseas salir?"):
             self.root.quit()
-
 
 if __name__ == "__main__":
     root = tk.Tk()

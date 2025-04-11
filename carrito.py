@@ -1,8 +1,8 @@
+import os
 import tkinter as tk
 from tkinter import ttk, messagebox
 from ttkbootstrap import Style
 from PIL import Image, ImageTk
-import os
 import logica
 import platform
 import subprocess
@@ -13,9 +13,10 @@ class CarritoVentana(tk.Toplevel):
         super().__init__(master)
         self.title("🛒 Carrito de Compras")
         self.geometry("1000x600")
-        self.style = Style(theme="darkly")
+        self.style = Style(theme="superhero")
         self.configure(bg=self.style.colors.bg)
 
+        self.master = master
         self.carrito = {}
         self.productos = logica.obtener_productos()
         self.filtrados = self.productos
@@ -26,6 +27,8 @@ class CarritoVentana(tk.Toplevel):
 
         self.crear_galeria_productos()
         self.crear_panel_lateral()
+
+        self.protocol("WM_DELETE_WINDOW", self.cerrar_ventana)
 
     def crear_galeria_productos(self):
         frame_galeria = ttk.Frame(self)
@@ -169,7 +172,7 @@ class CarritoVentana(tk.Toplevel):
                 "cantidad": cantidad,
                 "total": producto[3] * cantidad
             })
-            logica.vender_producto(producto[0], cantidad)  # Actualiza stock y registra historial
+            logica.vender_producto(producto[0], cantidad)
 
         ruta_pdf = generar_boleta_pdf(productos_para_pdf)
         messagebox.showinfo("Compra finalizada", "Orden de compra generada exitosamente.")
@@ -191,3 +194,13 @@ class CarritoVentana(tk.Toplevel):
         self.filtrados = self.productos
         self.actualizar_carrito()
         self.mostrar_productos()
+
+        if hasattr(self.master, "actualizar_tabla"):
+            self.master.actualizar_tabla()
+        if hasattr(self.master, "ver_historial"):
+            self.master.ver_historial()
+
+    def cerrar_ventana(self):
+        if hasattr(self.master, "actualizar_tabla"):
+            self.master.actualizar_tabla()
+        self.destroy()
